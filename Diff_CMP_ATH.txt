@@ -1,0 +1,52 @@
+1. **Imports**: 
+   - The code imports the `yfinance` library, which is used for fetching historical market data from Yahoo Finance.
+
+2. **Function `get_stock_info`**: 
+   - This function takes an NSE code (stock symbol) as input and returns a dictionary containing various information related to the stock.
+   - It attempts to download stock information using `yfinance`.
+   - The function extracts the current market price (`CMP`) from the downloaded data.
+   - It also calculates the all-time high (`ATH`) price from the historical data.
+   - Then, it calculates the percentage difference between the current market price and the all-time high.
+   - The function returns a dictionary containing the NSE code, current price, all-time high, and the percentage difference.
+   - If any error occurs during the process, such as an invalid NSE code or data being unavailable, it returns a dictionary indicating the error.
+
+3. **Example Usage**: 
+   - The code prompts the user to enter an NSE code (stock symbol).
+   - It calls the `get_stock_info` function with the entered NSE code to fetch the required stock information.
+   - If the function returns an error message, it prints the error.
+   - Otherwise, it prints out the fetched information, including the NSE code, current market price, all-time high, and the percentage difference between the current price and the all-time high.
+
+In summary, this code provides a simple tool to fetch information about a stock, including its current market price, all-time high price, and the percentage difference between them. It utilizes the `yfinance` library to download historical market data and performs calculations based on that data.
+
+
+
+
+
+### yfinance Library:
+
+**What is it?**
+- `yfinance` is a Python library that allows you to fetch historical market data, including stock prices, from Yahoo Finance.
+- It provides an easy-to-use interface to access a wide range of financial data for analysis and research purposes.
+
+**Parameters Used:**
+- `yf.download(tickers, period)`: This function is used to download historical market data for the specified tickers (stock symbols) and time period.
+  - `tickers`: It can accept a single ticker or a list of tickers. It represents the stock symbol(s) for which you want to retrieve the data.
+  - `period`: It specifies the time period for which you want to fetch the data. It can be specified in various formats such as "1d" (1 day), "1mo" (1 month), "1y" (1 year), "5y" (5 years), or "max" (maximum available data).
+
+
+**Example Usage:**
+```python
+import yfinance as yf
+
+# Download historical data for a single stock (e.g., AAPL for Apple Inc.) for the past 1 year
+data = yf.download("AAPL", period="1y")
+
+# Download historical data for multiple stocks (e.g., AAPL and MSFT) for the past 5 years
+data = yf.download(["AAPL", "MSFT"], period="5y")
+```
+
+**Additional Notes:**
+- `yfinance` also provides additional functionalities such as fetching dividend data, corporate actions, and financial statements.
+- It offers support for multiple stock exchanges and various data intervals (e.g., daily, weekly, monthly).
+
+Overall, `yfinance` is a powerful tool for fetching historical market data, making it a valuable resource for financial analysis, algorithmic trading, and investment research.
