@@ -1,11 +1,5 @@
-# Required library: yfinance
-# Description:
-#   - yfinance is a popular open-source Python library for downloading financial data from Yahoo Finance.
-#   - It provides a convenient way to access historical and current market data for stocks, currencies, and other financial instruments.
-#   - You can install yfinance using the following command in your terminal:
-#       pip install yfinance
-
 import yfinance as yf
+import pandas as pd
 
 def get_stock_info(nse_code):
     """
@@ -15,11 +9,18 @@ def get_stock_info(nse_code):
         - percentage difference between CMP and ATH
     """
     try:
-        # Download stock information using yfinance
-        stock_data = yf.download(f"{nse_code}.NS", period="max")
+        # Download stock information using yfinance with multi_level_index set to False
+        stock_data = yf.download(f"{nse_code}.NS", period="max", multi_level_index=False)
+
+        # Check if the DataFrame is empty
+        if stock_data.empty:
+            return {
+                "nse_code": nse_code,
+                "error": "No data available for the specified NSE code."
+            }
 
         # Get current market price (CMP)
-        current_price = stock_data["Close"][-1]
+        current_price = stock_data["Close"].iloc[-1] 
 
         # Get all-time high (ATH) price
         all_time_high = stock_data["High"].max()
@@ -27,8 +28,8 @@ def get_stock_info(nse_code):
         # Calculate percentage difference
         if all_time_high > 0:
             percentage_difference = (
-                (current_price - all_time_high) / all_time_high
-            ) * 100
+                (current_price - all_time_high) / all_time_high * 100
+            )
         else:
             percentage_difference = 0
 
@@ -43,22 +44,14 @@ def get_stock_info(nse_code):
         # Handle errors if NSE code is invalid or data cannot be downloaded
         return {
             "nse_code": nse_code,
-            "error": "Invalid NSE code or data unavailable",
+            "error": f"Invalid NSE code or data unavailable: {str(e)}",
         }
-
 
 # Example usage
 if __name__ == "__main__":
-    # Take input as a string containing stock names separated by commas
     nse_codes = input("Enter the list of stocks nse code separated by commas: (e.g: TCS, TITAN) ")
+    stocks_list = [stock.strip() for stock in nse_codes.split(',')]
 
-    # Split the input string into individual stock names
-    stocks_list = nse_codes.split(',')
-
-    # Remove leading and trailing whitespaces from each stock name
-    stocks_list = [stock.strip() for stock in stocks_list]
-
-    print("Stocks list:", stocks_list)
     for nse_code in stocks_list:
         stock_info = get_stock_info(nse_code)
 
@@ -68,7 +61,4 @@ if __name__ == "__main__":
             print(f"NSE Code: {stock_info['nse_code']}")
             print(f"Current Price (CMP): ₹{stock_info['current_price']:.2f}")
             print(f"All-Time High (ATH): ₹{stock_info['all_time_high']:.2f}")
-            print(
-                f"Difference between CMP and ATH: {stock_info['percentage_difference']:.2f}%"
-            )
-
+            print(f"Difference between CMP and ATH: {stock_info['percentage_difference']:.2f}%\n")

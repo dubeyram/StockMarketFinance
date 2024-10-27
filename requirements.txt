@@ -1,5 +1,5 @@
 
-Required library: yfinance
+Required library: yfinance (0.2.48)
 Description:
     - yfinance is a popular open-source Python library for downloading financial data from Yahoo Finance.
     - It provides a convenient way to access historical and current market data for stocks, currencies, and other financial instruments.
