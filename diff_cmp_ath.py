@@ -1,5 +1,5 @@
 import yfinance as yf
-import pandas as pd
+import diff_cmp_ath_gui
 
 def get_stock_info(nse_code):
     """
@@ -10,17 +10,17 @@ def get_stock_info(nse_code):
     """
     try:
         # Download stock information using yfinance with multi_level_index set to False
-        stock_data = yf.download(f"{nse_code}.NS", period="max", multi_level_index=False)
+        stock_data = diff_cmp_ath_gui.get_nse_data(nse_code)
 
         # Check if the DataFrame is empty
         if stock_data.empty:
             return {
                 "nse_code": nse_code,
-                "error": "No data available for the specified NSE code."
+                "error": "No data available for the specified NSE code.",
             }
 
         # Get current market price (CMP)
-        current_price = stock_data["Close"].iloc[-1] 
+        current_price = stock_data["Close"].iloc[-1]
 
         # Get all-time high (ATH) price
         all_time_high = stock_data["High"].max()
@@ -47,18 +47,24 @@ def get_stock_info(nse_code):
             "error": f"Invalid NSE code or data unavailable: {str(e)}",
         }
 
+
 # Example usage
 if __name__ == "__main__":
-    nse_codes = input("Enter the list of stocks nse code separated by commas: (e.g: TCS, TITAN) ")
-    stocks_list = [stock.strip() for stock in nse_codes.split(',')]
+    while True:
+        nse_codes = input(
+            "Enter the list of stocks nse code separated by commas: (e.g: TCS, TITAN) "
+        )
+        stocks_list = [stock.strip() for stock in nse_codes.split(",")]
 
-    for nse_code in stocks_list:
-        stock_info = get_stock_info(nse_code)
+        for nse_code in stocks_list:
+            stock_info = get_stock_info(nse_code)
 
-        if "error" in stock_info:
-            print(f"Error: {stock_info['error']}")
-        else:
-            print(f"NSE Code: {stock_info['nse_code']}")
-            print(f"Current Price (CMP): ₹{stock_info['current_price']:.2f}")
-            print(f"All-Time High (ATH): ₹{stock_info['all_time_high']:.2f}")
-            print(f"Difference between CMP and ATH: {stock_info['percentage_difference']:.2f}%\n")
+            if "error" in stock_info:
+                print(f"Error: {stock_info['error']}")
+            else:
+                print(f"NSE Code: {stock_info['nse_code']}")
+                print(f"Current Price (CMP): ₹{stock_info['current_price']:.2f}")
+                print(f"All-Time High (ATH): ₹{stock_info['all_time_high']:.2f}")
+                print(
+                    f"Difference between CMP and ATH: {stock_info['percentage_difference']:.2f}%\n"
+                )
